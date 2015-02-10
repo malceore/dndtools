@@ -1,0 +1,282 @@
+//DNDAssistant by Brandon T. Wood: Jan 14th, 2015
+
+//All music files unsorted, these will be taken and loaded into the sound board, music will loop and can only have one song playing at a time.
+var BGMusic = ["Dungeon Siege 1 Soundtrack 10 - The Dwarven Mines", 
+	      "Dungeon Siege 1 Soundtrack 11 - The Rescue of Torg", 
+	      "Dungeon Siege 1 Soundtrack 9 - The Spider Dungeon", 
+	      "Dungeon Siege 1 Soundtrack 12 - Glacern", 
+	      "Dungeon Siege II OST - 01 - The Siege of Greilyn Beach", 
+	      "Dungeon Siege 1 Soundtrack 1 - The Intro", 
+	      "Dungeon Siege II OST - 02 - Prologue", 
+	      "Dungeon Siege 1 Soundtrack 2 - The Menu - Frontend", 
+	      "Dungeon Siege II OST -  03 - Freedom for a Price", 
+	      "Dungeon Siege 1 Soundtrack 3 - The Maintheme", 
+	      "Dungeon Siege II OST - 05 - The Morden Towers", 
+	      "Dungeon Siege 1 Soundtrack 4 - The Farmhouse", 
+	      "Dungeon Siege II OST - 27 - Havoc Hath Wrought", 
+	      "Dungeon Siege 1 Soundtrack 5 - Path to The Crypts", 
+	      "Dungeon Siege 1 Soundtrack 6 - The Crypts",
+	      "Dungeon Siege 1 Soundtrack 7 - The Path to Stonebridge",
+	      "Night",
+	      "Hailing"
+];
+
+//All Sounds files, unsorted, sound affects can be played, multiple can be played at once and they will overlap.
+var soundAffects = ["Bad_Things",
+		    "Blunt_Hit",
+		    "Camp_Fire",
+		    "Chest_Unlock",
+		    "Door_Opens",
+		    "Hidden_Wall",
+		    "Kick_Door",
+		    "Victory",
+		    "Payed_For",
+		    "River",
+		    "Sitcom",
+		    "Sword_Hit",
+		    "The_Buzz",
+		    "Thunder",
+		    "Whistle",
+		    "Dramatic_Sting",
+		    "Mob",
+		    "Piggy",
+		    "Roar",
+		    "Fireball",
+		    "Battle",
+		    "Creature_1",
+		    "Creature_2"
+];
+
+
+var music; //Is actually a howler.js webgl sound object.
+var sound; //same 
+var musicVolume = 1.0;
+var soundVolume = 1.0;
+//Start of setup method
+function init(){
+
+	//Call methods to create dice roler and loot generator.
+	createNewButton("genLoot");
+	createNewButton("rollDice");
+
+	//Here I make calls to methods that create all the buttons that control the music.
+	createNewButton("musicPause");
+        createNewButton("musicVolumeUp");
+        createNewButton("musicVolumeDown");
+	createNewButton("musicBreak");
+	//This loop calls methods creates all the background music buttons you see on the left.
+        for(i = 0; i < BGMusic.length; i++){
+		createNewBGMusicButton(i,BGMusic[i]);
+	}
+
+	//Here I make calls to methods that create the controls for the sounds.
+	createNewButton("soundPause");
+	createNewButton("soundVolumeUp");
+	createNewButton("soundVolumeDown");
+	createNewButton("soundBreak");
+	//This loop creates all the sound affect buttons you see on the right.
+	for(j = 0; j < soundAffects.length; j++){
+                createNewSoundAffectButton(j,soundAffects[j])
+        }
+
+}
+
+function createNewButton(name){
+	if(name == "soundBreak"){
+		
+       		var br = document.createElement("br");
+		var foo = document.getElementById("sounds");
+                foo.appendChild(br);
+
+	}else if(name == "musicBreak"){
+
+                var br = document.createElement("br");
+                var foo = document.getElementById("music");
+                foo.appendChild(br);
+
+	}else if(name == "musicPause"){
+		
+		var element = document.createElement("BUTTON");
+	        var t = document.createTextNode("Pause");
+	        element.appendChild(t);
+	        element.name = name;
+	        element.onclick = function() {
+
+			music.fadeOut(0, 1200);
+	                console.log("Stopped!");
+        	};
+
+        	var foo = document.getElementById("music");
+        	foo.appendChild(element);
+
+	}else if(name == "musicVolumeUp"){
+
+		var element = document.createElement("BUTTON");
+                var t = document.createTextNode("Up");
+                element.appendChild(t);
+                element.name = name;
+                element.onclick = function() {
+
+			musicVolume = musicVolume + 0.1;
+                        music.volume(musicVolume);
+                        console.log("Lowered volume to: " + musicVolume);
+                };
+
+                var foo = document.getElementById("music");
+                foo.appendChild(element);
+
+	}else if(name == "musicVolumeDown"){
+
+		var element = document.createElement("BUTTON");
+                var t = document.createTextNode("Down");
+                element.appendChild(t);
+                element.name = name;
+                element.onclick = function() {
+
+			musicVolume = musicVolume - 0.1;
+                        music.volume(musicVolume);
+                        console.log("Volume raised to: " + musicVolume);
+                };
+
+                var foo = document.getElementById("music");
+                foo.appendChild(element);
+
+	}else if(name == "soundPause"){
+
+                var element = document.createElement("BUTTON");
+                var t = document.createTextNode("Pause");
+                element.appendChild(t);
+                element.name = name;
+                element.onclick = function() {
+
+                        sound.stop();
+                        console.log("Stopped!");
+                };
+
+                var foo = document.getElementById("sounds");
+                foo.appendChild(element);
+
+        }else if(name == "soundVolumeUp"){
+
+                var element = document.createElement("BUTTON");
+                var t = document.createTextNode("Up");
+                element.appendChild(t);
+                element.name = name;
+                element.onclick = function() {
+
+                        soundVolume = soundVolume + 0.1;
+                        sound.volume(soundVolume);
+                        console.log("Raised volume to: " + soundVolume);
+                };
+
+                var foo = document.getElementById("sounds");
+                foo.appendChild(element);
+
+        }else if(name == "soundVolumeDown"){
+
+                var element = document.createElement("BUTTON");
+                var t = document.createTextNode("Down");
+                element.appendChild(t);
+                element.name = name;
+                element.onclick = function() {
+
+                        soundVolume = soundVolume - 0.1;
+                        sound.volume(soundVolume);
+                        console.log("Lowered volume to: " + soundVolume);
+                };
+                var foo = document.getElementById("sounds");
+                foo.appendChild(element);
+
+        }else if(name == "genLoot"){
+	
+                var element = document.createElement("BUTTON");
+                var t = document.createTextNode("Generate Random Loot");
+                element.appendChild(t);
+                element.name = name;
+                element.onclick = function() {
+
+			genLoot();
+		};
+		var foo = document.getElementById("top");
+                foo.appendChild(element);
+	}else if(name == "rollDice"){
+
+                var element = document.createElement("BUTTON");
+                var t = document.createTextNode("Roll Dice");
+                element.appendChild(t);
+                element.name = name;
+                element.onclick = function() {
+
+                        rollDice();
+                };
+                var foo = document.getElementById("top");
+                foo.appendChild(element);
+}
+
+
+function createNewBGMusicButton(num, name){
+
+	var element = document.createElement("BUTTON");
+	var t = document.createTextNode(name);
+	element.appendChild(t);
+	element.name = name;
+	element.onclick = function() {
+ 
+		try{
+
+                        music.fadeOut(0, 800);
+                }catch(err){
+
+                        console.log("This always happens once because sound isn't called the first time, no worries.");
+                }
+
+		music = new Howl({
+
+        	        urls: [('sounds/' + BGMusic[num] + '.mp3'), ('sounds/' + BGMusic[num] + '.ogg')],
+			loop: true,
+        	}).play();
+		music.pos3d(3,0,0);
+        	console.log("CLICK!");
+	};
+	var foo = document.getElementById("music");
+	foo.appendChild(element);
+}
+
+
+function createNewSoundAffectButton(num, name){
+
+	var element = document.createElement("BUTTON");
+        var t = document.createTextNode(name);
+        element.appendChild(t);
+        element.name = name;
+        element.onclick = function() {
+
+                sound = new Howl({
+
+                        urls: [('sounds/' + soundAffects[num] + '.mp3'), ('sounds/' + soundAffects[num] + '.ogg')],
+        	}).play();
+		sound.pos3d(-3,0,0);
+                console.log("CLICK!");
+        };
+        var foo = document.getElementById("sounds");
+        foo.appendChild(element);
+}
+
+//Where x is the number of dice and y is the number of sides
+function rollDice(){
+
+	var holder = 0;
+        var roll = document.getElementById('dice').value;
+
+	//For the number of sides lets make a random number under the num of sides and no les than one.
+	for(i = 0; i <= x ; i ++){
+
+		holder =  Math.random() * (y - 1) + 1;
+	        TheTextBox.value = TheTextBox.value + "\n" + holder;
+
+	}
+        TheTextBox.value = TheTextBox.value + "\n";
+
+}
+
+//End of File

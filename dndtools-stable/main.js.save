@@ -1,0 +1,160 @@
+//DNDAssistant by Brandon T. Wood: Jan 14th, 2015
+
+//All music files unsorted, these will be taken and loaded into the sound board, music will stop to load new ones.
+var BGMusic = ["Dungeon Siege 1 Soundtrack 10 - The Dwarven Mines.mp3", 
+	      "Dungeon Siege 1 Soundtrack 11 - The Rescue of Torg.mp3", 
+	      "Dungeon Siege 1 Soundtrack 9 - The Spider Dungeon.mp3", 
+	      "Dungeon Siege 1 Soundtrack 12 - Glacern.mp3", 
+	      "Dungeon Siege II OST - 01 - The Siege of Greilyn Beach.mp3", 
+	      "Dungeon Siege 1 Soundtrack 1 - The Intro.mp3", 
+	      "Dungeon Siege II OST - 02 - Prologue.mp3", 
+	      "Dungeon Siege 1 Soundtrack 2 - The Menu - Frontend.mp3", 
+	      "Dungeon Siege II OST -  03 - Freedom for a Price.mp3", 
+	      "Dungeon Siege 1 Soundtrack 3 - The Maintheme.mp3", 
+	      "Dungeon Siege II OST - 05 - The Morden Towers.mp3", 
+	      "Dungeon Siege 1 Soundtrack 4 - The Farmhouse.mp3", 
+	      "Dungeon Siege II OST - 27 - Havoc Hath Wrought.mp3", 
+	      "Dungeon Siege 1 Soundtrack 5 - Path to The Crypts.mp3", 
+	      "Dungeon Siege 1 Soundtrack 6 - The Crypts.mp3",
+	      "Dungeon Siege 1 Soundtrack 7 - The Path to Stonebridge.mp3"
+];
+
+//All Sounds files, unsorted, sound affects can be played and they overlap.
+var soundAffects = ["Bad_Things.mp3",
+		    "Blunt_Hit.mp3",
+		    "Camp_Fire.mp3",
+		    "Chest_Unlock.mp3",
+		    "Door_Opens.mp3",
+		    "Hidden_Wall.mp3",
+		    "Kick_Door.mp3",
+		    "Victory.mp3",
+		    "Payed_For.mp3",
+		    "River.mp3",
+		    "Sitcom.mp3",
+		    "Sword_Hit.mp3",
+		    "The_Buzz.mp3",
+		    "Thunder.mp3",
+		    "Whistle.mp3",
+		    "Dramatic_Sting.mp3"
+];
+
+var soundBoard = new PIXI.Stage(0x191E28, true);
+var renderer = PIXI.autoDetectRenderer(1200, 550);
+document.body.appendChild(renderer.view);
+var sound; //Is actaully a howler.js webm sound object.
+//Start of setup methode
+function init(){
+
+	//Lets make pause and play buttons for our player along the top.
+	//var pauseText = new PIXI.Text("Pause", {font:"18px Arial", fill:"black$
+        //pauseText.position.x = 0;
+        //pauseText.position.y = 0;
+
+	var pauseButton = new PIXI.Graphics();
+        pauseButton.beginFill(0xE9F0F5);
+        pauseButton.drawRect(10, 0, 130, 30);
+        pauseButton.endFill();
+
+	//pauseButton.addChild(pauseText);
+        pauseButton.interactive = true;
+        pauseButton.buttonMode = true;
+Math.floor((Math.random() * 10) + 1);
+        pauseButton.position.x = 10;
+        pauseButton.position.y = 0;
+	soundBoard.addChild(pauseButton);
+
+	pauseButton.click = function(mouseData){
+		console.log("Pause");
+		sound.fadeOut(0, 1200);
+	}
+
+	//Now we must create all of the buttons for all of the sound effects.
+	var xDist = 0;
+	var yDist = 0;
+	for(i = 0; i < BGMusic.length; i++){
+		//first we need to make a methode for creating buttons and send it the x, y and number in array.
+		createBGMusicButton(xDist,yDist,i)
+		yDist = yDist+32;
+	}
+
+	xDist = 550;
+	yDist = 0;
+        for(j = 0; j < soundAffects.length; j++){
+                createSoundAffectButton(xDist,yDist,j)
+                yDist = yDist+32;
+        }
+
+
+	update();
+        function update(){
+      		renderer.render(soundBoard);
+                requestAnimFrame(update);
+	}
+
+}
+
+function createBGMusicButton(x, y, num){
+
+	var text = new PIXI.Text(BGMusic[num], {font:"18px Arial", fill:"black"});
+        text.position.x = 25;
+        text.position.y = 25;
+
+        var button = new PIXI.Graphics();
+        button.addChild(text);
+
+        button.beginFill(0x97C6F1);
+        button.drawRect(20, 20, 540, 30);
+        button.endFill();
+
+        button.interactive = true;
+        button.buttonMode = true;
+
+        button.position.x = x;
+        button.position.y = y;
+
+	soundBoard.addChild(button);
+
+	button.click = function(mouseData){
+		try{
+			sound.fadeOut(0, 1200);
+        	}catch(err){
+			console.log("This always happens once because sound isn't called the first time, no worries.");
+		}
+	        sound = new Howl({
+                        urls: [('sounds/' + BGMusic[num])],
+			buffer: true
+                }).play();
+                console.log("CLICK!");
+        }
+}
+
+function createSoundAffectButton(x, y, num){
+
+	var name = new PIXI.Text(soundAffects[num], {font:"18px Arial", fill:"black"});
+        name.position.x = 25;
+        name.position.y = 25;
+
+        var button = new PIXI.Graphics();
+        button.addChild(name);
+
+        button.beginFill(0x36628E);
+        button.drawRect(20, 20, 200, 30);
+        button.endFill();
+
+        button.interactive = true;
+        button.buttonMode = true;
+
+        button.position.x = x;
+        button.position.y = y;
+
+        soundBoard.addChild(button);
+
+        button.click = function(mouseData){
+                sound = new Howl({
+                        urls: [('sounds/' + soundAffects[num])],
+                }).play();
+                console.log("CLICK!");
+        }
+}
+
+//End of File
