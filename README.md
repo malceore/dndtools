@@ -9,7 +9,7 @@ As of the most recent update Dndtools features:
  -  Writable Note Sheet  
  -  Working on all Platforms including Windows, Android, IOS and Linux
 
-Dndtools is a Javascript program that you can run in your choice of browsers, it's powered by the amazing and lightweight Howler.js sound library(http://goldfirestudios.com/blog/104/howler.js-Modern-Web-Audio-Javascript-Library). It allows a Dungeon Master to bring a game to life with enchanting music and action packed sound effects players will love. Having a quality die roller is a must for most inspiring DMs and the Loot generation takes the work out of end of encounter loot division. To run the program click on "Index.html" and it will automitically start in your default browser with two basic sound files build in. 
+Dndtools is an open-source Javascript program that you can run in your choice of browsers, it's powered by the amazing and lightweight Howler.js sound library (http://goldfirestudios.com/blog/104/howler.js-Modern-Web-Audio-Javascript-Library). It allows a Dungeon Master to bring a game to life with enchanting music and action packed sound effects players will love. Having a quality die roller is a must for most inspiring DMs and the Loot generation takes the work out of end of encounter loot division. To run the program click on "Index.html" and it will automitically start in your default browser with two basic sound files build in. 
 
 
 ==== How do I change Sounds and Music? ====
